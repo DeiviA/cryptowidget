@@ -1,15 +1,20 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import AllCrypto from '@/components/pages/AllCrypto'
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'coins-list',
-      component: HelloWorld
-    }
-  ]
+const routes = [
+  {
+    path: '/',
+    name: 'all-crypto',
+    component: AllCrypto
+  }
+]
+
+const router = new Router({
+  mode: 'history',
+  routes
 })
+
+export default router
