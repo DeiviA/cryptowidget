@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view/>
+    <div class="widget-wrapper">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -196,5 +198,11 @@ input {
   &:focus {
     outline: none;
   }
+}
+
+.widget-wrapper {
+  padding-top: 50px;
+  width: 920px;
+  margin: 0 auto;
 }
 </style>

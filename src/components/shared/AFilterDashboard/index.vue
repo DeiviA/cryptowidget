@@ -1,16 +1,26 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-elem table__index">
-      <p>#</p>
+      <p># <i class="small fa fa-unsorted"/></p>
     </div>
     <div class="dashboard-elem table__name">
-      <p>Name</p>
+      <div class="dashboard__logo"></div>
+      <p>Name <i class="small fa fa-unsorted"/></p>
+    </div>
+    <div class="dashboard-elem table__symbol">
+      <p>Symbol <i class="small fa fa-unsorted"/></p>
+    </div>
+    <div class="dashboard-elem table__price">
+      <p>Price (USD) <i class="small fa fa-unsorted"/> <i class="small fa fa-filter"/></p>
+    </div>
+    <div class="dashboard-elem table__market">
+      <p>Market Cap <i class="small fa fa-unsorted"/> <i class="small fa fa-filter"/></p>
     </div>
     <div
       v-for="item in arr"
       :key="item"
       class="dashboard-elem table__item">
-      <p>{{ item }}</p>
+      <p>{{ item }} <i class="small fa fa-unsorted"/> <i class="small fa fa-filter"/></p>
     </div>
   </div>
 </template>
@@ -20,7 +30,7 @@ export default {
   name: 'AFilterDashboard',
   data () {
     return {
-      arr: ['Symbol', 'Price (USD)', 'Market Cap', 'Vol (24h)', 'Total Vol', 'Chg (24h)', 'Chg (7d)']
+      arr: ['vol (24h)', 'total Vol', 'chg (24h)', 'chg (7d)']
     }
   }
 }
@@ -35,14 +45,24 @@ export default {
   background-color: #f6f9fc;
 }
 
+.small {
+  font-size: 12px;
+}
+
 .dashboard {
   &-elem {
     display: flex;
     align-items: center;
     font-weight: 600;
     line-height: 2.14;
+    font-size: 14px;
+    text-transform: capitalize;
     color: rgba(106, 124, 156, 0.7);
     border-right: 1px solid #d8e2eb;
+  }
+  &__logo {
+    width: 32px;
+    height: 40px;
   }
 }
 </style>

@@ -6,6 +6,7 @@
       class="tab"
     >
       <p>{{ item }}</p>
+      <i class="small fa fa-sort-down"/>
     </div>
   </div>
 </template>
@@ -28,6 +29,10 @@ export default {
   justify-content: flex-start;
 }
 
+.small {
+  font-size: 12px;
+}
+
 .tab {
   width: 80px;
   height: 33px;
@@ -36,7 +41,7 @@ export default {
   border-radius: 5px 5px 0 0;
   color: #36576f;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   &__active {
     width: 80px;

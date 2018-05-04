@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-wrapper">
+  <div>
     <a-filter-bar/>
     <div class="widget-body-wrapper">
       <a-filter-dashboard/>
@@ -37,13 +37,9 @@ export default {
 </script>
 
 <style lang="scss">
-.widget-wrapper {
-  padding-top: 50px;
-  width: 920px;
-  margin: 0 auto;
-}
 .widget-body-wrapper {
   width: 100%;
+  min-height: 278px;
   border: 1px solid #d8e2eb;
   border-radius: 0 5px 5px 5px;
   overflow: hidden;
@@ -53,7 +49,7 @@ export default {
   &__index {
     display: flex;
     align-items: center;
-    padding-left: 10px;
+    justify-content: center;
     width: 37px;
   }
   &__name {
@@ -62,12 +58,33 @@ export default {
     padding-left: 10px;
     width: 181px;
   }
+  &__symbol {
+    width: 92px;
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+  }
+  &__price {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 120px;
+    padding-right: 10px;
+  }
+  &__market {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 120px;
+    padding-right: 10px;
+  }
   &__item {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    width: 100px;
-    padding-right: 10px;
+    width: 92px;
+    white-space: nowrap;
+    padding-right: 8px;
   }
 }
 </style>
