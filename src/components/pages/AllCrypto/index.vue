@@ -3,7 +3,7 @@
     <a-filter-bar/>
     <div class="widget-body-wrapper">
       <a-filter-dashboard/>
-      <a-crypto-item/>
+      <a-crypto-list/>
     </div>
   </div>
 </template>
@@ -13,11 +13,11 @@ import { mapActions } from 'vuex'
 
 import AFilterBar from '@/components/shared/AFilterBar'
 import AFilterDashboard from '@/components/shared/AFilterDashboard'
-import ACryptoItem from '@/components/shared/ACryptoItem'
+import ACryptoList from '@/components/shared/ACryptoList'
 
 export default {
   name: 'AllCrypto',
-  components: { AFilterBar, AFilterDashboard, ACryptoItem },
+  components: { AFilterBar, AFilterDashboard, ACryptoList },
   data () {
     return {
       myStr: ''
@@ -85,6 +85,10 @@ export default {
     width: 92px;
     white-space: nowrap;
     padding-right: 8px;
+    &_wide {
+      width: 120px;
+      padding-right: 10px;
+    }
   }
 }
 </style>

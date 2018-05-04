@@ -10,27 +10,30 @@
     <div class="dashboard-elem table__symbol">
       <p>Symbol <i class="small fa fa-unsorted"/></p>
     </div>
-    <div class="dashboard-elem table__price">
-      <p>Price (USD) <i class="small fa fa-unsorted"/> <i class="small fa fa-filter"/></p>
-    </div>
-    <div class="dashboard-elem table__market">
-      <p>Market Cap <i class="small fa fa-unsorted"/> <i class="small fa fa-filter"/></p>
-    </div>
     <div
       v-for="item in arr"
       :key="item"
+      :class="[ item === 'price (USD)' || item === 'market cap' ? 'table__item_wide' : '']"
       class="dashboard-elem table__item">
       <p>{{ item }} <i class="small fa fa-unsorted"/> <i class="small fa fa-filter"/></p>
+      <div
+        v-if="item === 'market cap'"
+        class="drop-dawn-container">
+        <a-drop-down/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import ADropDown from '@/components/shared/ADropDown'
+
 export default {
   name: 'AFilterDashboard',
+  components: { ADropDown },
   data () {
     return {
-      arr: ['vol (24h)', 'total Vol', 'chg (24h)', 'chg (7d)']
+      arr: ['price (USD)', 'market cap', 'vol (24h)', 'total Vol', 'chg (24h)', 'chg (7d)']
     }
   }
 }
@@ -59,6 +62,7 @@ export default {
     text-transform: capitalize;
     color: rgba(106, 124, 156, 0.7);
     border-right: 1px solid #d8e2eb;
+    position: relative;
   }
   &__logo {
     width: 32px;

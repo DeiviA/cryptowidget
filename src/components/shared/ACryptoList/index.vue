@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      v-for="(item, index) in getList"
+      v-for="(item, index) in filteredCurrencies"
       :key="item.name + index"
       class="crypto"
     >
@@ -70,7 +70,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getList: 'getList'
+      filteredCurrencies: 'filteredCurrencies'
     })
   }
 }

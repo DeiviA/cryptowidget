@@ -72,6 +72,7 @@ export default {
   name: 'SingleCrypto',
   filters: {
     addComma (val) {
+      if (!val) return val
       let newVal = val.toString().split('.')[0]
       newVal = newVal.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       return newVal

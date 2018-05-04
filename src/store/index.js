@@ -10,7 +10,7 @@ export const state = {
 }
 
 export const getters = {
-  getList: state => state.filteredCurrencies
+  filteredCurrencies: state => state.filteredCurrencies
 }
 
 export const actions = {
