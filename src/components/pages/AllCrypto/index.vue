@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { eventBus } from '@/main'
 
 import AFilterBar from '@/components/shared/AFilterBar'
@@ -24,7 +24,11 @@ export default {
       filteredCurrencies: []
     }
   },
+  computed: {
+    ...mapGetters(['filterQuery', 'unfilteredCurrencies'])
+  },
   async mounted () {
+    eventBus.$on('filtering', this.onFiltering)
     try {
       this.filteredCurrencies = await this.getCurrencies()
     } catch (e) {
@@ -33,6 +37,14 @@ export default {
   },
   methods: {
     ...mapActions(['getCurrencies']),
+    onFiltering () {
+      console.log('onFiltering...')
+      this.filteredCurrencies = this.unfilteredCurrencies.filter((currency) => {
+        return Object.keys(this.filterQuery).every(key => {
+          return (currency[key] >= this.filterQuery[key].min && currency[key] <= this.filterQuery[key].max)
+        })
+      })
+    },
     hideFilters () {
       eventBus.$emit('hideFilters')
     }

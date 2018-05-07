@@ -7,16 +7,18 @@ Vue.use(Vuex)
 
 export const state = {
   filteredCurrencies: [],
-  unfilteredCurrencies: []
+  unfilteredCurrencies: [],
+  filterQuery: {}
 }
 
 export const getters = {
   filteredCurrencies: state => state.filteredCurrencies,
-  unfilteredCurrencies: state => state.unfilteredCurrencies
+  unfilteredCurrencies: state => state.unfilteredCurrencies,
+  filterQuery: state => state.filterQuery
 }
 
 export const actions = {
-  async getCurrencies ({ commit }, payload) {
+  async getCurrencies ({ commit }) {
     try {
       const { data } = await Vue.axios.get('?Take=50&Page=0')
       commit('setList', data)
@@ -24,6 +26,14 @@ export const actions = {
     } catch (e) {
       throw e
     }
+  },
+  addFilterQuery ({ commit }, { key, ...payload }) {
+    const newVal = {}
+    newVal[key] = payload
+    commit('addFilterQuery', newVal)
+  },
+  removeFilterQuery ({ commit }, { key }) {
+    commit('removeFilterQuery', key)
   }
 }
 
@@ -31,6 +41,12 @@ export const mutations = {
   setList (state, payload) {
     state.filteredCurrencies = payload
     state.unfilteredCurrencies = payload
+  },
+  addFilterQuery (state, payload) {
+    state.filterQuery = { ...state.filterQuery, ...payload }
+  },
+  removeFilterQuery (state, key) {
+    delete state.filterQuery[key]
   }
 }
 

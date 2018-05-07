@@ -15,7 +15,7 @@
       :key="item.text"
       :class="[ item.text === 'price (USD)' || item.text === 'market cap' ? 'table__item_wide' : '']"
       class="dashboard-elem table__item">
-      <p>{{ item.text }} <i class="small fa fa-unsorted"/> <i @click.stop="showDropDown(index)" :class="[ item.show ? 'picked' : '' ]" class="small fa fa-filter"/></p>
+      <p>{{ item.text }} <i class="small fa fa-unsorted"/> <i @click.stop="showDropDown(index)" :class="[ item.show || filterQuery[item.key] ? 'picked' : '' ]" class="small fa fa-filter"/></p>
       <div
         v-if="item.show"
         class="drop-dawn-container">
@@ -71,7 +71,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['unfilteredCurrencies'])
+    ...mapGetters(['unfilteredCurrencies', 'filterQuery'])
   },
   mounted () {
     eventBus.$on('hideFilters', () => {
@@ -89,8 +89,7 @@ export default {
           if (item[filter.key] < min) min = item[filter.key]
           if (item[filter.key] > max) max = item[filter.key]
         })
-        const elem = { max, min, text: filter.text }
-        console.log('elem', elem)
+        const elem = { max, min, text: filter.text, key: filter.key }
         return elem
       }
       return { max: 1000000000000, min: 0 }

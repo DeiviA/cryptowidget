@@ -1,44 +1,51 @@
 <template>
-  <div>
+  <div class="crypto-wrapper">
     <div
-      v-for="(item, index) in filteredCurrencies"
-      :key="item.name + index"
-      class="crypto"
-    >
-      <div class="crypto-item table__index">
-        <p>{{ index + 1 }}</p>
-      </div>
-      <router-link
-        :to="{ name: 'single-crypto', params: { crypto: item } }"
-        class="crypto-item table__name"
+      v-if="filteredCurrencies.length === 0"
+      class="no-results">
+      <p>No search results</p>
+    </div>
+    <div v-else>
+      <div
+        v-for="(item, index) in filteredCurrencies"
+        :key="item.name + index"
+        class="crypto"
       >
-        <div class="crypto-item__logo">
-          <img
-            :src="item.logoUrl"
-            class="crypto-item__img">
+        <div class="crypto-item table__index">
+          <p>{{ index + 1 }}</p>
         </div>
-        <p class="crypto-item__name">{{ item.name }}</p>
-      </router-link>
-      <div class="crypto-item table__symbol">
-        <p>{{ item.symbol }}</p>
-      </div>
-      <div class="crypto-item table__price">
-        <p>{{ item.price | shorten }}</p>
-      </div>
-      <div class="crypto-item table__market">
-        <p>${{ item.marketCap | convert }}</p>
-      </div>
-      <div class="crypto-item table__item">
-        <p>${{ item.volume24H | convert }}</p>
-      </div>
-      <div class="crypto-item table__item">
-        <p>{{ item.change1H }}%</p>
-      </div>
-      <div class="crypto-item table__item">
-        <p>{{ item.change24H }}%</p>
-      </div>
-      <div class="crypto-item table__item">
-        <p>{{ item.change7D }}%</p>
+        <router-link
+          :to="{ name: 'single-crypto', params: { crypto: item } }"
+          class="crypto-item table__name"
+        >
+          <div class="crypto-item__logo">
+            <img
+              :src="item.logoUrl"
+              class="crypto-item__img">
+          </div>
+          <p class="crypto-item__name">{{ item.name }}</p>
+        </router-link>
+        <div class="crypto-item table__symbol">
+          <p>{{ item.symbol }}</p>
+        </div>
+        <div class="crypto-item table__price">
+          <p>{{ item.price | shorten }}</p>
+        </div>
+        <div class="crypto-item table__market">
+          <p>${{ item.marketCap | convert }}</p>
+        </div>
+        <div class="crypto-item table__item">
+          <p>${{ item.volume24H | convert }}</p>
+        </div>
+        <div class="crypto-item table__item">
+          <p>{{ item.change1H }}%</p>
+        </div>
+        <div class="crypto-item table__item">
+          <p>{{ item.change24H }}%</p>
+        </div>
+        <div class="crypto-item table__item">
+          <p>{{ item.change7D }}%</p>
+        </div>
       </div>
     </div>
   </div>
@@ -73,6 +80,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.crypto-wrapper {
+  min-height: 230px;
+}
+
 .crypto {
   width: 100%;
   height: 46px;
@@ -103,5 +114,13 @@ export default {
   &:hover {
     background-color: #f6f9fc;
   }
+}
+
+.no-results {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 230px;
+  font-size: 24px;
 }
 </style>
