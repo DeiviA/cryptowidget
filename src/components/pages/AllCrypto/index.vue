@@ -29,8 +29,19 @@ export default {
   },
   async mounted () {
     eventBus.$on('filtering', this.onFiltering)
+    eventBus.$on('sorting', ({ key, isSorted, isNumeric }) => {
+      if (isSorted) {
+        this.filteredCurrencies.reverse()
+      } else {
+        this.sortingValues(key, isNumeric)
+      }
+    })
     try {
-      this.filteredCurrencies = await this.getCurrencies()
+      if (this.unfilteredCurrencies.length > 0) {
+        eventBus.$emit('filtering')
+      } else {
+        this.filteredCurrencies = await this.getCurrencies()
+      }
     } catch (e) {
       console.log('error', e)
     }
@@ -44,6 +55,19 @@ export default {
           return (currency[key] >= this.filterQuery[key].min && currency[key] <= this.filterQuery[key].max)
         })
       })
+    },
+    sortingValues (key, isNumeric) {
+      if (isNumeric) {
+        this.filteredCurrencies.sort((a, b) => {
+          return a[key] - b[key]
+        })
+      } else {
+        this.filteredCurrencies.sort((a, b) => {
+          if (a[key] < b[key]) return -1
+          if (a[key] > b[key]) return 1
+          return 0
+        })
+      }
     },
     hideFilters () {
       eventBus.$emit('hideFilters')
@@ -59,6 +83,7 @@ export default {
   border: 1px solid #d8e2eb;
   border-radius: 0 5px 5px 5px;
   overflow: hidden;
+  background-color: white;
 }
 
 .table {

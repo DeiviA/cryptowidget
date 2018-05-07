@@ -57,13 +57,20 @@ export default {
   },
   mounted () {
     const oldFilter = this.filterQuery[this.filterElement.key]
-    this.maxVal = this.filterElement.max
-    this.minVal = oldFilter ? oldFilter.min : this.filterElement.min
-    this.currentValue = oldFilter ? oldFilter.max : this.filterElement.max
+    this.maxVal = Math.ceil(this.filterElement.max)
+    this.minVal = Math.floor(oldFilter ? oldFilter.min : this.filterElement.min)
+    this.currentValue = oldFilter ? oldFilter.max : Math.ceil(this.filterElement.max)
+    // watch after changing 'currentValue'
+    this.$watch('currentValue', debounce(function () {
+      this.applyFilter()
+    }, 700))
+    this.$watch('minVal', debounce(function () {
+      this.applyFilter()
+    }, 700))
   },
   data () {
     return {
-      currentValue: 470644499,
+      currentValue: 0,
       minVal: 0,
       maxVal: 1000,
       slider: {
@@ -76,14 +83,6 @@ export default {
   },
   computed: {
     ...mapGetters(['filterQuery'])
-  },
-  watch: {
-    currentValue: debounce(function () {
-      this.applyFilter()
-    }, 700),
-    minVal: debounce(function () {
-      this.applyFilter()
-    }, 700)
   },
   methods: {
     ...mapActions(['addFilterQuery', 'removeFilterQuery']),

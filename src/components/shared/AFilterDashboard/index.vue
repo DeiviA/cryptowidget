@@ -1,21 +1,33 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-elem table__index">
-      <p># <i class="small fa fa-unsorted"/></p>
+      <p>#</p>
     </div>
     <div class="dashboard-elem table__name">
       <div class="dashboard__logo"></div>
-      <p>Name <i class="small fa fa-unsorted"/></p>
+      <p>Name <i
+        @click.stop="sortByLetters('name', isSortedName)"
+        class="small fa fa-unsorted"/></p>
     </div>
     <div class="dashboard-elem table__symbol">
-      <p>Symbol <i class="small fa fa-unsorted"/></p>
+      <p>Symbol <i
+        @click.stop="sortByLetters('symbol', isSortedSymbol)"
+        class="small fa fa-unsorted"/></p>
     </div>
     <div
       v-for="(item, index) in filters"
       :key="item.text"
-      :class="[ item.text === 'price (USD)' || item.text === 'market cap' ? 'table__item_wide' : '']"
+      :class="[ item.key === 'price' || item.key === 'marketCap' ? 'table__item_wide' : '']"
       class="dashboard-elem table__item">
-      <p>{{ item.text }} <i class="small fa fa-unsorted"/> <i @click.stop="showDropDown(index)" :class="[ item.show || filterQuery[item.key] ? 'picked' : '' ]" class="small fa fa-filter"/></p>
+      <p>{{ item.text }}
+        <i
+          @click.stop="sortValues(item)"
+          class="small fa fa-unsorted"/>
+        <i
+          @click.stop="showDropDown(index)"
+          :class="[ item.show || filterQuery[item.key] ? 'picked' : '' ]"
+          class="small fa fa-filter"/>
+      </p>
       <div
         v-if="item.show"
         class="drop-dawn-container">
@@ -36,36 +48,44 @@ export default {
   components: { ADropDown },
   data () {
     return {
+      isSortedName: false,
+      isSortedSymbol: false,
       filters: [
         {
           text: 'price (USD)',
           key: 'price',
-          show: false
+          show: false,
+          isSorted: false
         },
         {
           text: 'market cap',
           key: 'marketCap',
-          show: false
+          show: false,
+          isSorted: false
         },
         {
           text: 'vol (24h)',
           key: 'volume24H',
-          show: false
+          show: false,
+          isSorted: false
         },
         {
           text: 'total Vol',
           key: 'change1H',
-          show: false
+          show: false,
+          isSorted: false
         },
         {
           text: 'chg (24h)',
           key: 'change24H',
-          show: false
+          show: false,
+          isSorted: false
         },
         {
           text: 'chg (7d)',
           key: 'change7D',
-          show: false
+          show: false,
+          isSorted: false
         }
       ]
     }
@@ -99,6 +119,21 @@ export default {
         filter.show = false
       })
       this.filters[index].show = true
+    },
+    sortValues (item) {
+      const { key, isSorted } = item
+      eventBus.$emit('sorting', { key, isSorted, isNumeric: true })
+      this.filters.forEach(filter => {
+        filter.isSorted = false
+      })
+      if (!isSorted) item.isSorted = true
+    },
+    sortByLetters (key, isSorted) {
+      eventBus.$emit('sorting', { key, isSorted, isNumeric: false })
+      this.isSortedName = false
+      this.isSortedSymbol = false
+      if (!isSorted && key === 'name') this.isSortedName = true
+      if (!isSorted && key === 'symbol') this.isSortedSymbol = true
     }
   }
 }
