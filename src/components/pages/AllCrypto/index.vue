@@ -1,15 +1,16 @@
 <template>
   <div>
     <a-filter-bar/>
-    <div class="widget-body-wrapper">
+    <div class="widget-body-wrapper" @click="hideFilters">
       <a-filter-dashboard/>
-      <a-crypto-list/>
+      <a-crypto-list :filteredCurrencies="filteredCurrencies"/>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import { eventBus } from '@/main'
 
 import AFilterBar from '@/components/shared/AFilterBar'
 import AFilterDashboard from '@/components/shared/AFilterDashboard'
@@ -20,18 +21,21 @@ export default {
   components: { AFilterBar, AFilterDashboard, ACryptoList },
   data () {
     return {
-      myStr: ''
+      filteredCurrencies: []
     }
   },
   async mounted () {
     try {
-      await this.getCurrencies()
+      this.filteredCurrencies = await this.getCurrencies()
     } catch (e) {
       console.log('error', e)
     }
   },
   methods: {
-    ...mapActions(['getCurrencies'])
+    ...mapActions(['getCurrencies']),
+    hideFilters () {
+      eventBus.$emit('hideFilters')
+    }
   }
 }
 </script>

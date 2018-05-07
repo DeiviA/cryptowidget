@@ -1,12 +1,12 @@
 <template>
-  <div class="dropdown-wrapper">
+  <div class="dropdown-wrapper" @click.stop>
     <div class="dropdown-arrow"></div>
-    <div class="dropdown-header"></div>
+    <div class="dropdown-header">{{ filterElement.text }}</div>
     <div class="dropdown-body">
       <div class="dropdown-body__row">
         <div class="dropdown-body__block">
           <p class="dropdown__label">From</p>
-          <input v-model="minValue" type="text" class="dropdown__input" disabled>
+          <input v-model="filterElement.min" type="text" class="dropdown__input" disabled>
         </div>
         <div class="dropdown-body__block">
           <p class="dropdown__label">To</p>
@@ -17,8 +17,8 @@
         <div class="dropdown-body__slider-container">
           <vue-slide-bar
             v-model="currentValue"
-            :min="1"
-            :max="10000"
+            :min="filterElement.min"
+            :max="filterElement.max"
             :processStyle="slider.processStyle"
             :lineHeight="slider.lineHeight"
           >
@@ -40,10 +40,16 @@ import VueSlideBar from 'vue-slide-bar'
 export default {
   name: 'ADropDown',
   components: { VueSlideBar },
+  props: {
+    filterElement: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
       minValue: 0,
-      currentValue: 5,
+      currentValue: 470644499,
       slider: {
         lineHeight: 2,
         processStyle: {

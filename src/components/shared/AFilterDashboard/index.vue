@@ -11,21 +11,24 @@
       <p>Symbol <i class="small fa fa-unsorted"/></p>
     </div>
     <div
-      v-for="item in arr"
-      :key="item"
-      :class="[ item === 'price (USD)' || item === 'market cap' ? 'table__item_wide' : '']"
+      v-for="(item, index) in filters"
+      :key="item.text"
+      :class="[ item.text === 'price (USD)' || item.text === 'market cap' ? 'table__item_wide' : '']"
       class="dashboard-elem table__item">
-      <p>{{ item }} <i class="small fa fa-unsorted"/> <i class="small fa fa-filter"/></p>
+      <p>{{ item.text }} <i class="small fa fa-unsorted"/> <i @click.stop="showDropDown(index)" :class="[ item.show ? 'picked' : '' ]" class="small fa fa-filter"/></p>
       <div
-        v-if="item === 'market cap'"
+        v-if="item.show"
         class="drop-dawn-container">
-        <a-drop-down/>
+        <a-drop-down :filterElement="getMaxAndMin(item)"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { eventBus } from '@/main'
+
 import ADropDown from '@/components/shared/ADropDown'
 
 export default {
@@ -33,7 +36,70 @@ export default {
   components: { ADropDown },
   data () {
     return {
-      arr: ['price (USD)', 'market cap', 'vol (24h)', 'total Vol', 'chg (24h)', 'chg (7d)']
+      filters: [
+        {
+          text: 'price (USD)',
+          key: 'price',
+          show: false
+        },
+        {
+          text: 'market cap',
+          key: 'marketCap',
+          show: false
+        },
+        {
+          text: 'vol (24h)',
+          key: 'volume24H',
+          show: false
+        },
+        {
+          text: 'total Vol',
+          key: 'change1H',
+          show: false
+        },
+        {
+          text: 'chg (24h)',
+          key: 'change24H',
+          show: false
+        },
+        {
+          text: 'chg (7d)',
+          key: 'change7D',
+          show: false
+        }
+      ]
+    }
+  },
+  computed: {
+    ...mapGetters(['unfilteredCurrencies'])
+  },
+  mounted () {
+    eventBus.$on('hideFilters', () => {
+      this.filters.forEach(filter => {
+        filter.show = false
+      })
+    })
+  },
+  methods: {
+    getMaxAndMin (filter) {
+      let min = Infinity
+      let max = -Infinity
+      if (this.unfilteredCurrencies.length > 0) {
+        this.unfilteredCurrencies.forEach(item => {
+          if (item[filter.key] < min) min = item[filter.key]
+          if (item[filter.key] > max) max = item[filter.key]
+        })
+        const elem = { max, min, text: filter.text }
+        console.log('elem', elem)
+        return elem
+      }
+      return { max: 1000000000000, min: 0 }
+    },
+    showDropDown (index) {
+      this.filters.forEach(filter => {
+        filter.show = false
+      })
+      this.filters[index].show = true
     }
   }
 }
@@ -50,6 +116,11 @@ export default {
 
 .small {
   font-size: 12px;
+  cursor: pointer;
+}
+
+.picked {
+  color: rgb(106, 124, 156);
 }
 
 .dashboard {

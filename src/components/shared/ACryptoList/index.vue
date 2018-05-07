@@ -45,10 +45,14 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   name: 'AFilterDashboard',
+  props: {
+    filteredCurrencies: {
+      type: Array,
+      required: true
+    }
+  },
   filters: {
     convert (val) {
       let newVal = val.toString().split('.')[0]
@@ -64,14 +68,6 @@ export default {
       if (newVal.length > 9) newVal = newVal.slice(0, 9)
       return newVal
     }
-  },
-  data () {
-    return {}
-  },
-  computed: {
-    ...mapGetters({
-      filteredCurrencies: 'filteredCurrencies'
-    })
   }
 }
 </script>
