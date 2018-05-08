@@ -3,27 +3,17 @@
     <div class="dashboard-elem table__index">
       <p>#</p>
     </div>
-    <div class="dashboard-elem table__name">
-      <div class="dashboard__logo"></div>
-      <p>Name <i
-        @click.stop="sortByLetters('name', isSortedName)"
-        class="small fa fa-unsorted"/></p>
-    </div>
-    <div class="dashboard-elem table__symbol">
-      <p>Symbol <i
-        @click.stop="sortByLetters('symbol', isSortedSymbol)"
-        class="small fa fa-unsorted"/></p>
-    </div>
     <div
       v-for="(item, index) in filters"
       :key="item.text"
-      :class="[ item.key === 'price' || item.key === 'marketCap' ? 'table__item_wide' : '']"
-      class="dashboard-elem table__item">
+      :class="item.className"
+      class="dashboard-elem">
       <p>{{ item.text }}
         <i
           @click.stop="sortValues(item)"
           class="small fa fa-unsorted"/>
         <i
+          v-if="item.hasFilter"
           @click.stop="showDropDown(index)"
           :class="[ item.show || filterQuery[item.key] ? 'picked' : '' ]"
           class="small fa fa-filter"/>
@@ -31,14 +21,16 @@
       <div
         v-if="item.show"
         class="drop-dawn-container">
-        <a-drop-down :filterElement="getMaxAndMin(item)"/>
+        <a-drop-down
+          @filtering="applyFilters"
+          :filterElement="getMaxAndMin(item)"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import { eventBus } from '@/main'
 
 import ADropDown from '@/components/shared/ADropDown'
@@ -48,52 +40,79 @@ export default {
   components: { ADropDown },
   data () {
     return {
-      isSortedName: false,
-      isSortedSymbol: false,
       filters: [
+        {
+          text: 'name',
+          key: 'name',
+          show: false,
+          isSorted: false,
+          hasFilter: false,
+          className: 'table__name indent'
+        },
+        {
+          text: 'symbol',
+          key: 'symbol',
+          show: false,
+          isSorted: false,
+          hasFilter: false,
+          className: 'table__symbol'
+        },
         {
           text: 'price (USD)',
           key: 'price',
           show: false,
-          isSorted: false
+          isSorted: false,
+          hasFilter: true,
+          className: 'table__item table__item_wide'
         },
         {
           text: 'market cap',
           key: 'marketCap',
           show: false,
-          isSorted: false
+          isSorted: false,
+          hasFilter: true,
+          className: 'table__item table__item_wide'
         },
         {
           text: 'vol (24h)',
           key: 'volume24H',
           show: false,
-          isSorted: false
+          isSorted: false,
+          hasFilter: true,
+          className: 'table__item'
         },
         {
           text: 'total Vol',
           key: 'change1H',
           show: false,
-          isSorted: false
+          isSorted: false,
+          hasFilter: true,
+          className: 'table__item'
         },
         {
           text: 'chg (24h)',
           key: 'change24H',
           show: false,
-          isSorted: false
+          isSorted: false,
+          hasFilter: true,
+          className: 'table__item'
         },
         {
           text: 'chg (7d)',
           key: 'change7D',
           show: false,
-          isSorted: false
+          isSorted: false,
+          hasFilter: true,
+          className: 'table__item'
         }
       ]
     }
   },
   computed: {
-    ...mapGetters(['unfilteredCurrencies', 'filterQuery'])
+    ...mapGetters(['unfilteredCurrencies', 'filterQuery', 'sortKey'])
   },
   mounted () {
+    if (this.sortKey) this.setSorted()
     eventBus.$on('hideFilters', () => {
       this.filters.forEach(filter => {
         filter.show = false
@@ -101,6 +120,7 @@ export default {
     })
   },
   methods: {
+    ...mapActions(['changeSortKey']),
     getMaxAndMin (filter) {
       let min = Infinity
       let max = -Infinity
@@ -115,25 +135,38 @@ export default {
       return { max: 1000000000000, min: 0 }
     },
     showDropDown (index) {
+      const isShowing = this.filters[index].show
       this.filters.forEach(filter => {
         filter.show = false
       })
-      this.filters[index].show = true
+      if (!isShowing) this.filters[index].show = true
     },
-    sortValues (item) {
-      const { key, isSorted } = item
-      eventBus.$emit('sorting', { key, isSorted, isNumeric: true })
+    setSorted () {
+      this.filters.forEach(filter => {
+        if (this.sortKey.key === filter.key) {
+          filter.isSorted = !this.sortKey.isSorted
+        }
+      })
+    },
+    removeSortedStatus (item) {
+      const isSorted = item.isSorted
       this.filters.forEach(filter => {
         filter.isSorted = false
       })
       if (!isSorted) item.isSorted = true
     },
-    sortByLetters (key, isSorted) {
-      eventBus.$emit('sorting', { key, isSorted, isNumeric: false })
-      this.isSortedName = false
-      this.isSortedSymbol = false
-      if (!isSorted && key === 'name') this.isSortedName = true
-      if (!isSorted && key === 'symbol') this.isSortedSymbol = true
+    sortValues (item) {
+      const { key, isSorted, hasFilter } = item
+      let isNumeric = false
+      if (hasFilter) isNumeric = true
+      const payload = { key, isSorted, isNumeric }
+      // eventBus.$emit('sorting', payload)
+      this.removeSortedStatus(item)
+      this.changeSortKey(payload)
+      this.$emit('sorting', payload)
+    },
+    applyFilters () {
+      this.$emit('filtering')
     }
   }
 }
@@ -151,6 +184,10 @@ export default {
 .small {
   font-size: 12px;
   cursor: pointer;
+}
+
+.indent {
+  padding-left: 42px;
 }
 
 .picked {

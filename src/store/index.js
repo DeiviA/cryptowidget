@@ -8,24 +8,33 @@ Vue.use(Vuex)
 export const state = {
   filteredCurrencies: [],
   unfilteredCurrencies: [],
-  filterQuery: {}
+  filterQuery: {},
+  sortKey: null
 }
 
 export const getters = {
-  filteredCurrencies: state => state.filteredCurrencies,
+  getfilteredCurrencies: state => state.filteredCurrencies,
   unfilteredCurrencies: state => state.unfilteredCurrencies,
-  filterQuery: state => state.filterQuery
+  filterQuery: state => state.filterQuery,
+  sortKey: state => state.sortKey
 }
 
 export const actions = {
-  async getCurrencies ({ commit }) {
+  async getCurrencies ({ commit }, payload) {
     try {
-      const { data } = await Vue.axios.get('?Take=50&Page=0')
+      const searchParams = new URLSearchParams()
+      for (const key in payload) {
+        searchParams.append(key, payload[key])
+      }
+      const { data } = await Vue.axios.get('?' + searchParams)
       commit('setList', data)
       return data
     } catch (e) {
       throw e
     }
+  },
+  setFilteredCurrencies ({ commit }, payload) {
+    commit('setFilteredCurrencies', payload)
   },
   addFilterQuery ({ commit }, { key, ...payload }) {
     const newVal = {}
@@ -34,6 +43,15 @@ export const actions = {
   },
   removeFilterQuery ({ commit }, { key }) {
     commit('removeFilterQuery', key)
+  },
+  clearFilterQuery ({ commit }) {
+    commit('clearFilterQuery')
+  },
+  changeSortKey ({ commit }, payload) {
+    commit('changeSortKey', payload)
+  },
+  clearSortKey ({ commit }) {
+    commit('clearSortKey')
   }
 }
 
@@ -42,11 +60,23 @@ export const mutations = {
     state.filteredCurrencies = payload
     state.unfilteredCurrencies = payload
   },
+  setFilteredCurrencies (state, payload) {
+    state.filteredCurrencies = payload
+  },
   addFilterQuery (state, payload) {
     state.filterQuery = { ...state.filterQuery, ...payload }
   },
   removeFilterQuery (state, key) {
     delete state.filterQuery[key]
+  },
+  clearFilterQuery (state) {
+    state.filterQuery = {}
+  },
+  changeSortKey (state, sortKey) {
+    state.sortKey = sortKey
+  },
+  clearSortKey (state) {
+    state.sortKey = null
   }
 }
 

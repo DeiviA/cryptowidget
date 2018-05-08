@@ -29,7 +29,7 @@
           <p>{{ item.symbol }}</p>
         </div>
         <div class="crypto-item table__price">
-          <p>{{ item.price | shorten }}</p>
+          <p>${{ item.price | shorten }}</p>
         </div>
         <div class="crypto-item table__market">
           <p>${{ item.marketCap | convert }}</p>
@@ -38,13 +38,13 @@
           <p>${{ item.volume24H | convert }}</p>
         </div>
         <div class="crypto-item table__item">
-          <p>{{ item.change1H }}%</p>
+          <p :class="[item.change1H < 0 ? 'crypto-item_red' : 'crypto-item_green']">{{ item.change1H | addPlusSymbol }}%</p>
         </div>
         <div class="crypto-item table__item">
-          <p>{{ item.change24H }}%</p>
+          <p :class="[item.change24H < 0 ? 'crypto-item_red' : 'crypto-item_green']">{{ item.change24H | addPlusSymbol }}%</p>
         </div>
         <div class="crypto-item table__item">
-          <p>{{ item.change7D }}%</p>
+          <p :class="[item.change7D < 0 ? 'crypto-item_red' : 'crypto-item_green']">{{ item.change7D | addPlusSymbol }}%</p>
         </div>
       </div>
     </div>
@@ -74,6 +74,10 @@ export default {
       let newVal = val.toString()
       if (newVal.length > 9) newVal = newVal.slice(0, 9)
       return newVal
+    },
+    addPlusSymbol (val) {
+      if (val < 0) return val
+      return `+${val}`
     }
   }
 }
@@ -93,6 +97,12 @@ export default {
   transition: background-color 0.2s;
   &-item {
     border-right: 1px solid #d8e2eb;
+    &_red {
+      color: #ef1217;
+    }
+    &_green {
+      color: #22bb33;
+    }
     &__name {
       color: #467291;
       font-weight: 600;

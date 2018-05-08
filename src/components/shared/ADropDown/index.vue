@@ -88,11 +88,11 @@ export default {
     ...mapActions(['addFilterQuery', 'removeFilterQuery']),
     applyFilter () {
       this.addFilterQuery({ key: this.filterElement.key, min: +this.minVal, max: this.currentValue })
-      eventBus.$emit('filtering')
+      this.$emit('filtering')
     },
     clearFilter () {
       this.removeFilterQuery({ key: this.filterElement.key })
-      eventBus.$emit('filtering')
+      this.$emit('filtering')
       eventBus.$emit('hideFilters')
     }
   }
@@ -103,33 +103,44 @@ export default {
 .dropdown-wrapper {
   width: 240px;
   position: absolute;
-  top: 46px;
-  right: 0;
-  border: 1px solid #d8e2eb;
-  border-radius: 5px;
-  overflow: hidden;
+  top: 38px;
+  right: -15px;
+  // overflow: hidden;
 }
 
 .dropdown {
   &-arrow {
+    width: 0;
+    height: 0;
+    float: right;
+    margin-right: 21px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #36576f;
   }
   &-header {
     height: 30px;
     width: 100%;
     background-color: #36576f;
     padding: 0 10px;
+    border-radius: 5px 5px 0 0;
     color: white;
     display: flex;
     justify-content: space-between;
     &__clear {
       cursor: pointer;
+      font-size: 10px;
+      line-height: 3;
     }
   }
   &-body {
     width: 100%;
     /// height: 82px;
+    border: 1px solid #d8e2eb;
+    border-radius: 0 0 5px 5px;
     padding: 10px;
     background-color: white;
+    overflow: hidden;
     &__row {
       display: flex;
       justify-content: space-between;
