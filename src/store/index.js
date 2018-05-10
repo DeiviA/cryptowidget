@@ -3,23 +3,21 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-// const baseUrl = 'http://fmpedia-dev-ws1:81/api/cryptocurrencies/get-currencies?Take=10&Page=0'
-
-export const state = {
+const state = {
   filteredCurrencies: [],
   unfilteredCurrencies: [],
   filterQuery: {},
   sortKey: null
 }
 
-export const getters = {
+const getters = {
   getfilteredCurrencies: state => state.filteredCurrencies,
   unfilteredCurrencies: state => state.unfilteredCurrencies,
   filterQuery: state => state.filterQuery,
   sortKey: state => state.sortKey
 }
 
-export const actions = {
+const actions = {
   async getCurrencies ({ commit }, payload) {
     try {
       const searchParams = new URLSearchParams()
@@ -55,7 +53,7 @@ export const actions = {
   }
 }
 
-export const mutations = {
+const mutations = {
   setList (state, payload) {
     state.filteredCurrencies = payload
     state.unfilteredCurrencies = payload

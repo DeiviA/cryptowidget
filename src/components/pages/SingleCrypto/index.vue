@@ -30,8 +30,12 @@
         <div class="currency-info">
           <div class="currency-info__top">
             <div class="currency-info__top_left">
-              <div class="currency-info__price"><span class="currency-info__price_bold">${{ cryptocurrency.price }}</span> USD ({{ cryptocurrency.change24H }}%)</div>
-              <div class="currency-info__count">1.00000000 {{ cryptocurrency.symbol }} ({{ cryptocurrency.change1H }}%)
+              <div class="currency-info__price">
+                <span class="currency-info__price_bold">${{ cryptocurrency.price }}</span> USD
+                <span :class="[cryptocurrency.change24H < 0 ? 'currency-info__price_red' : 'currency-info__price_green']">({{ cryptocurrency.change24H | addPlusSymbol }}%)</span>
+              </div>
+              <div class="currency-info__count">1.00000000 {{ cryptocurrency.symbol }}
+                <span :class="[cryptocurrency.change1H < 0 ? 'currency-info__price_red' : 'currency-info__price_green']">({{ cryptocurrency.change1H | addPlusSymbol }}%)</span>
               </div>
             </div>
             <div class="currency-info__top_right">
@@ -76,6 +80,10 @@ export default {
       let newVal = val.toString().split('.')[0]
       newVal = newVal.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       return newVal
+    },
+    addPlusSymbol (val) {
+      if (val < 0) return val
+      return `+${val}`
     }
   },
   data () {
@@ -218,6 +226,12 @@ export default {
       font-size: 24px;
       &_bold {
         font-weight: bold;
+      }
+      &_red {
+        color: #ef1217;
+      }
+      &_green {
+        color: #22bb33;
       }
     }
     &__count {

@@ -23,6 +23,7 @@
         class="drop-dawn-container">
         <a-drop-down
           @filtering="applyFilters"
+          @hideDropDown="hideAllDropDowns"
           :filterElement="getMaxAndMin(item)"/>
       </div>
     </div>
@@ -31,7 +32,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { eventBus } from '@/main'
 
 import ADropDown from '@/components/shared/ADropDown'
 
@@ -113,11 +113,6 @@ export default {
   },
   mounted () {
     if (this.sortKey) this.setSorted()
-    eventBus.$on('hideFilters', () => {
-      this.filters.forEach(filter => {
-        filter.show = false
-      })
-    })
   },
   methods: {
     ...mapActions(['changeSortKey']),
@@ -141,6 +136,11 @@ export default {
       })
       if (!isShowing) this.filters[index].show = true
     },
+    hideAllDropDowns () {
+      this.filters.forEach(filter => {
+        filter.show = false
+      })
+    },
     setSorted () {
       this.filters.forEach(filter => {
         if (this.sortKey.key === filter.key) {
@@ -160,7 +160,6 @@ export default {
       let isNumeric = false
       if (hasFilter) isNumeric = true
       const payload = { key, isSorted, isNumeric }
-      // eventBus.$emit('sorting', payload)
       this.removeSortedStatus(item)
       this.changeSortKey(payload)
       this.$emit('sorting', payload)

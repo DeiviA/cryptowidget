@@ -9,13 +9,9 @@ import router from './router'
 import store from './store'
 
 Vue.config.productionTip = false
-export const eventBus = new Vue()
 
 const instance = axios.create({
   baseURL: 'http://fmpedia-dev-ws1:81/api/cryptocurrencies/get-currencies'
-  // headers: {
-  //   'Access-Control-Allow-Origin': '*'
-  // }
 })
 
 Vue.use(VueAxios, instance)

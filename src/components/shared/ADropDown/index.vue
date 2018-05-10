@@ -42,9 +42,8 @@
 <script>
 import VueSlideBar from 'vue-slide-bar'
 import debounce from 'debounce'
-import { mapActions, mapGetters } from 'vuex'
 
-import { eventBus } from '@/main'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'ADropDown',
@@ -93,7 +92,7 @@ export default {
     clearFilter () {
       this.removeFilterQuery({ key: this.filterElement.key })
       this.$emit('filtering')
-      eventBus.$emit('hideFilters')
+      this.$emit('hideDropDown')
     }
   }
 }
@@ -104,7 +103,7 @@ export default {
   width: 240px;
   position: absolute;
   top: 38px;
-  right: -15px;
+  right: 0px;
   // overflow: hidden;
 }
 
@@ -113,7 +112,7 @@ export default {
     width: 0;
     height: 0;
     float: right;
-    margin-right: 21px;
+    margin-right: 6px;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-bottom: 8px solid #36576f;

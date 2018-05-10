@@ -10,6 +10,7 @@
       <a-filter-dashboard
         @sorting="sortValues"
         @filtering="filterValues"
+        ref="filterDashboard"
       />
       <a-crypto-list
         v-if="isLoaded"
@@ -22,7 +23,6 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { eventBus } from '@/main'
 
 import AFilterBar from '@/components/shared/AFilterBar'
 import AFilterDashboard from '@/components/shared/AFilterDashboard'
@@ -68,7 +68,6 @@ export default {
       }
     },
     filterValues () {
-      console.log('onFiltering...')
       this.filteredCurrencies = this.unfilteredCurrencies.filter((currency) => {
         return Object.keys(this.filterQuery).every(key => {
           return (currency[key] >= this.filterQuery[key].min && currency[key] <= this.filterQuery[key].max)
@@ -93,7 +92,7 @@ export default {
       }
     },
     hideFilters () {
-      eventBus.$emit('hideFilters')
+      this.$refs.filterDashboard.hideAllDropDowns()
     }
   }
 }
