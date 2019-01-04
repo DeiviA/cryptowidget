@@ -1,8 +1,6 @@
 <template>
   <div>
-    <a-filter-bar
-      @getList="getCurrenciesList"
-    />
+    <a-tabs @getList="getCurrenciesList"/>
     <div
       @click="hideFilters"
       class="widget-body-wrapper"
@@ -24,14 +22,14 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 
-import AFilterBar from '@/components/shared/AFilterBar'
+import ATabs from '@/components/shared/ATabs'
 import AFilterDashboard from '@/components/shared/AFilterDashboard'
 import ACryptoList from '@/components/shared/ACryptoList'
 import ASpinner from '@/components/shared/ASpinner'
 
 export default {
   name: 'AllCrypto',
-  components: { AFilterBar, AFilterDashboard, ACryptoList, ASpinner },
+  components: { ATabs, AFilterDashboard, ACryptoList, ASpinner },
   data () {
     return {
       filteredCurrencies: [],

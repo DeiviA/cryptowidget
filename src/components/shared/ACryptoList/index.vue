@@ -76,8 +76,9 @@ export default {
       return newVal
     },
     addPlusSymbol (val) {
-      if (val < 0) return val
-      return `+${val}`
+      const newVal = val.toFixed(2)
+      if (newVal < 0) return newVal
+      return `+${newVal}`
     }
   }
 }

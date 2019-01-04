@@ -127,6 +127,7 @@ export default {
   },
   mounted () {
     this.cryptocurrency = this.$route.params.crypto
+    if (!this.cryptocurrency) this.$router.push({ path: '/' })
   }
 }
 </script>
